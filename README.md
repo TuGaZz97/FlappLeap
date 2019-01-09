@@ -1,8 +1,6 @@
 # FlappLeap
-Projet de 2ème semestre inter-techniciens 2017-2018, CFPTi.
+Projet de 2ème semestre inter-techniciens 2018-2019, CFPTi.
 
 ## Élèves
-* Pin Guillaume [T1]
-* Sutter Antoine [T1]
-* Favre Alan [T2]
-* Verstraete Marin [T2]
+* Rodrigues Micaël [T2]
+* Mendez Gregory [T2]
