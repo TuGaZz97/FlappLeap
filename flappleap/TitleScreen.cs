@@ -15,12 +15,14 @@ namespace FlappLeap
         private string spriteFontButton;
 
         private Button HighscoresButton { get; set; }
-        private Button PlayButton { get; set; }
+        private Button OnePlayerButton { get; set; }
+
+        private Button MultiPlayerButton { get; set; }
         private Texture2D Logo { get; set; }
 #if DEBUG
         private Button CheatAdd { get; set; }
 #endif
-        public TitleScreen(FlappLeapGame game) : base(game)
+        public TitleScreen(FlappLeapGame game, bool multiplayerOn = false) : base(game)
         {
         }
 
@@ -32,15 +34,17 @@ namespace FlappLeap
             spriteFontButton = "FontSmall";
 
             // Highscore button disabled for now, play button moved to center
-            this.HighscoresButton = new Button(this.Game, "Highscores", (gameWidth / 2) - (buttonsWidth / 2) - buttonsSpacing, (gameHeight / 2) + 200, buttonsWidth, 50, spriteFontButton);
-            this.PlayButton = new Button(this.Game, "Play", (gameWidth / 2) - (buttonsWidth / 2) + buttonsSpacing, (gameHeight / 2) + 200, buttonsWidth, 50, spriteFontButton);
-            //this.PlayButton = new Button(this.Game, "Play", (gameWidth / 2) - (buttonsWidth / 2) - buttonsSpacing, (gameHeight / 2) + 200, buttonsWidth * 2, 50);
+            this.HighscoresButton = new Button(this.Game, "Highscores", (gameWidth / 3) - (buttonsWidth / 2) - buttonsSpacing, (gameHeight / 2) + 200, buttonsWidth, 50, spriteFontButton);
+            this.OnePlayerButton = new Button(this.Game, "One Player", (gameWidth / 3) - (buttonsWidth / 2) + buttonsSpacing, (gameHeight / 2) + 200, buttonsWidth, 50, spriteFontButton);
+            this.MultiPlayerButton = new Button(this.Game, "Multiplayer", (gameWidth / 3) - (buttonsWidth / 2) + buttonsSpacing*3, (gameHeight / 2) + 200, buttonsWidth , 50, spriteFontButton);
 
             this.HighscoresButton.Click += (s, e) => this.FlappLeapGame.ChangeScreen(typeof(HighScoreScreen));
-            this.PlayButton.Click += (s, e) => this.FlappLeapGame.ChangeScreen(typeof(PlayScreen));
+            this.OnePlayerButton.Click += (s, e) => this.FlappLeapGame.ChangeScreen(typeof(PlayScreen));
+            this.MultiPlayerButton.Click += (s, e) => this.FlappLeapGame.ChangeScreen(typeof(PlayScreen), true);
 
             this.Game.Components.Add(this.HighscoresButton);
-            this.Game.Components.Add(this.PlayButton);
+            this.Game.Components.Add(this.OnePlayerButton);
+            this.Game.Components.Add(this.MultiPlayerButton);
 
             base.Initialize();
         }
@@ -67,7 +71,7 @@ namespace FlappLeap
         protected override void Dispose(bool disposing)
         {
             this.Game.Components.Remove(this.HighscoresButton);
-            this.Game.Components.Remove(this.PlayButton);
+            this.Game.Components.Remove(this.OnePlayerButton);
 #if DEBUG
             this.Game.Components.Remove(this.CheatAdd);
 #endif

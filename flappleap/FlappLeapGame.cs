@@ -82,7 +82,27 @@ namespace FlappLeap
             if (score > -1)
                 this.Screen = Activator.CreateInstance(type, this, score) as GameScreen;
             else
-                this.Screen = Activator.CreateInstance(type, this) as GameScreen;
+                this.Screen = Activator.CreateInstance(type, this, false) as GameScreen;
+
+
+            this.Components.Add(this.Screen);
+        }
+
+        public void ChangeScreen(Type type, bool multiplayerOn, int score = -1)
+        {
+            if (!type.IsSubclassOf(typeof(GameScreen)))
+                return;
+
+            if (this.Screen != null)
+            {
+                this.Components.Remove(this.Screen);
+                this.Screen.Dispose();
+            }
+
+            if (score > -1)
+                this.Screen = Activator.CreateInstance(type, this, score) as GameScreen;
+            else
+                this.Screen = Activator.CreateInstance(type, this, multiplayerOn) as GameScreen;
 
 
             this.Components.Add(this.Screen);

@@ -140,16 +140,31 @@ namespace FlappLeap
             }
         }
 
-        public Player(Texture2D Texture, float Zoom)
+        public Player(Texture2D Texture, float Zoom, bool isPlayerTwo = false)
             : base(Texture, Zoom, true)
         {
-            Position = new Vector2((Constants.GAME_WIDTH / 2) - (Bounds.Width / 2), 200 * Zoom);
+            if(isPlayerTwo)
+            {
+                Position = new Vector2((Constants.GAME_WIDTH / 3) - (Bounds.Width / 2), 200 * Zoom);
+            }
+            else
+            {
+                Position = new Vector2((Constants.GAME_WIDTH / 2) - (Bounds.Width / 2), 200 * Zoom);
+            }
+            
             Dead = false;
         }
 
-        public void Reset()
+        public void Reset(bool isPlayerTwo = false)
         {
-            Position = new Vector2((Constants.GAME_WIDTH / 2) - (Bounds.Width / 2), 200 * Zoom);
+            if (isPlayerTwo)
+            {
+                Position = new Vector2((Constants.GAME_WIDTH / 3) - (Bounds.Width / 2), 200 * Zoom);
+            }
+            else
+            {
+                Position = new Vector2((Constants.GAME_WIDTH / 2) - (Bounds.Width / 2), 200 * Zoom);
+            }
             Dead = false;
             speed = Vector2.Zero;
         }

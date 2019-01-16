@@ -17,6 +17,7 @@ namespace FlappLeap
     {
         private Button BackButton { get; set; }
         private Button HighScoreButton{ get; set; }
+        public bool MultiplayerOn { get; set; }
         private SpriteFont gameFontBig;
         private SpriteFont gameFontSmall;
 
@@ -24,7 +25,8 @@ namespace FlappLeap
         private List<Background> Background;
         private List<Obstacle[]> Obstacles;
         private Floor Floor;
-        private Player Player;
+        private Player PlayerOne;
+        private Player PlayerTwo;
 
         // Textures are designed for 720p, screen is upsclaed with the ScreenRation property
         private const int PlayScreen_WIDTH = 1280;
@@ -44,7 +46,8 @@ namespace FlappLeap
         private double WaitingFor = 0;
 
         // the player's score
-        private int playerScore;
+        private int playerOneScore;
+        private int playerTwoScore;
 
         private GameStates GameState;
         private enum GameStates
@@ -54,10 +57,12 @@ namespace FlappLeap
             Dead
         };
 
-        public PlayScreen(FlappLeapGame game) : base(game)
+        public PlayScreen(FlappLeapGame game, bool multiplayerOn) : base(game)
         {
             GameState = GameStates.Waiting;
-            playerScore = 0;
+            playerOneScore = 0;
+            playerTwoScore = 0;
+            this.MultiplayerOn = multiplayerOn;
         }
 
         public override void Initialize()
@@ -80,7 +85,8 @@ namespace FlappLeap
 
             Obstacles = new List<Obstacle[]>(); // array of 2 obstacles, Top and Bottom
             Floor = new Floor(Game.Content.Load<Texture2D>(@"Images\Obstacles\floor"), ScreenRatio);
-            Player = new Player(Game.Content.Load<Texture2D>(@"Images\doge"), ScreenRatio);
+            PlayerOne = new Player(Game.Content.Load<Texture2D>(@"Images\doge"), ScreenRatio);
+            if(this.MultiplayerOn) PlayerTwo = new Player(Game.Content.Load<Texture2D>(@"Images\LilSleepy"), ScreenRatio, true);
 
             // Back button
             this.BackButton = new Button(this.Game, "Back", 20, Constants.GAME_HEIGHT - 100, 150, 50, spriteFontButton);
@@ -99,7 +105,7 @@ namespace FlappLeap
         private void HighScoreButton_Click(object sender, MouseState e)
         {
             OnClose();
-            this.FlappLeapGame.ChangeScreen(typeof(AddHighScoreScreen), playerScore);
+            this.FlappLeapGame.ChangeScreen(typeof(AddHighScoreScreen), playerOneScore);
         }
 
         private void BackButton_Click(object sender, MouseState e)
@@ -117,38 +123,78 @@ namespace FlappLeap
             if (this.FlappLeapGame.JumpRequested)
             {
                 this.FlappLeapGame.JumpRequested = false;
-                Player.Jump();
+                PlayerOne.Jump();
             }
 
-            if (Player.Dead)
+
+
+            if(this.MultiplayerOn)
             {
-                bool found = false;
-                foreach(var xD in  Game.Components)
-                    found = (xD == this.HighScoreButton);
-
-                if (!found)
-                    // Adds the hightscore button
-                    this.Game.Components.Add(this.HighScoreButton);
-
-                GameState = GameStates.Dead;
-                Obstacles.Clear();
-
-                Sprite.WithCollision.Add(Floor);
-
-                if (state.IsKeyDown(Keys.Space) || this.FlappLeapGame.JumpRequested)
+                if(PlayerOne.Dead && PlayerTwo.Dead)
                 {
-                    this.FlappLeapGame.JumpRequested = false;
-                    Player.Reset();
-                    playerScore = 0;
-                    GameState = GameStates.Waiting;
-                    WaitingFor = TotalPlayTime;
+                    bool found = false;
+                    foreach (var xD in Game.Components)
+                        found = (xD == this.HighScoreButton);
 
-                    this.Game.Components.Remove(this.HighScoreButton);
+                    if (!found)
+                        // Adds the hightscore button
+                        this.Game.Components.Add(this.HighScoreButton);
 
-                    // TODO Opens the add score menu when the game is over
-                    // this.FlappLeapGame.ChangeScreen(typeof(AddHighScoreScreen), playerScore);
+                    GameState = GameStates.Dead;
+                    Obstacles.Clear();
+
+                    Sprite.WithCollision.Add(Floor);
+
+                    if (state.IsKeyDown(Keys.Space) || this.FlappLeapGame.JumpRequested)
+                    {
+                        this.FlappLeapGame.JumpRequested = false;
+                        PlayerOne.Reset();
+                        PlayerTwo.Reset(true);
+                        playerOneScore = 0;
+                        playerTwoScore = 0;
+                        GameState = GameStates.Waiting;
+                        WaitingFor = TotalPlayTime;
+
+                        this.Game.Components.Remove(this.HighScoreButton);
+
+                        // TODO Opens the add score menu when the game is over
+                        // this.FlappLeapGame.ChangeScreen(typeof(AddHighScoreScreen), playerScore);
+                    }
                 }
             }
+            else
+            {
+                if(PlayerOne.Dead)
+                {
+                    bool found = false;
+                    foreach (var xD in Game.Components)
+                        found = (xD == this.HighScoreButton);
+
+                    if (!found)
+                        // Adds the hightscore button
+                        this.Game.Components.Add(this.HighScoreButton);
+
+                    GameState = GameStates.Dead;
+                    Obstacles.Clear();
+
+                    Sprite.WithCollision.Add(Floor);
+
+                    if (state.IsKeyDown(Keys.Space) || this.FlappLeapGame.JumpRequested)
+                    {
+                        this.FlappLeapGame.JumpRequested = false;
+                        PlayerOne.Reset();
+                        playerOneScore = 0;
+                        GameState = GameStates.Waiting;
+                        WaitingFor = TotalPlayTime;
+
+                        this.Game.Components.Remove(this.HighScoreButton);
+
+                        // TODO Opens the add score menu when the game is over
+                        // this.FlappLeapGame.ChangeScreen(typeof(AddHighScoreScreen), playerScore);
+                    }
+                }
+            }
+            
 
             // Scrolling Backgrounds
             foreach (Background bg in Background)
@@ -185,10 +231,10 @@ namespace FlappLeap
             foreach (Obstacle[] obs in Obstacles)
             {
                 // Just check for the top since its aligned with the bottom anyway
-                if (obs[0].OutOfScreen && !Player.Dead)
+                if (obs[0].OutOfScreen && !PlayerOne.Dead)
                 {
                     // The obstacles got out of the screen thus the player survived it
-                    playerScore++;
+                    playerOneScore++;
                 }
             }
 
@@ -211,7 +257,11 @@ namespace FlappLeap
             }
             else
             {
-                Player.Update(gameTime, ScreenRatio);
+                if(this.MultiplayerOn)
+                {
+                    PlayerTwo.Update(gameTime, ScreenRatio);
+                }
+                PlayerOne.Update(gameTime, ScreenRatio);
             }
 
             base.Update(gameTime);
@@ -236,7 +286,8 @@ namespace FlappLeap
 
             // Draws the floor and the player
             Floor.Draw(Sb, FlappLeapGame.Graphics);
-            Player.Draw(Sb, FlappLeapGame.Graphics);
+            PlayerOne.Draw(Sb, FlappLeapGame.Graphics);
+            PlayerTwo.Draw(Sb, FlappLeapGame.Graphics);
 
             if (GameState == GameStates.Waiting)
             {
@@ -250,7 +301,7 @@ namespace FlappLeap
             }
 
             // Generate the score string
-            string scoreString = string.Format("Score : {0}", playerScore.ToString());
+            string scoreString = string.Format("Score : {0}", playerOneScore.ToString());
             Vector2 ScoreOrigin = (Constants.Screen / 2) - gameFontBig.MeasureString(scoreString) / 2;
 
             if (GameState == GameStates.Dead)
@@ -304,7 +355,7 @@ namespace FlappLeap
         {
             Background.Clear();
             Obstacles.Clear();
-            Player.Reset();
+            PlayerOne.Reset();
             Sprite.WithCollision.Clear();
         }
     }
