@@ -72,6 +72,7 @@ namespace FlappLeap
         {
             this.Game.Components.Remove(this.HighscoresButton);
             this.Game.Components.Remove(this.OnePlayerButton);
+            this.Game.Components.Remove(this.MultiPlayerButton);
 #if DEBUG
             this.Game.Components.Remove(this.CheatAdd);
 #endif

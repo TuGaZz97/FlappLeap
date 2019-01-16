@@ -7,6 +7,7 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using System;
 
 namespace FlappLeap
@@ -15,6 +16,9 @@ namespace FlappLeap
     {
         protected SpriteBatch Sb { get; set; }
         protected SpriteFont Font { get; set; }
+
+        //Music Game
+        private Song FlappSong;
 
         protected Vector2 CenterScreen
         {
@@ -31,6 +35,8 @@ namespace FlappLeap
         {
             this.Sb = new SpriteBatch(this.Game.GraphicsDevice);
             this.Font = this.Game.Content.Load<SpriteFont>("FontBig");
+            FlappSong = this.Game.Content.Load<Song>("Musiques/FlappLeapMusic");
+            MediaPlayer.Play(FlappSong);
 
             base.LoadContent();
         }

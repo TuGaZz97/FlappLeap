@@ -154,3 +154,9 @@
 /processorParam:TextureFormat=Color
 /build:Images/doge.png
 
+#begin Musiques/FlappLeapMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Musiques/FlappLeapMusic.mp3
+
