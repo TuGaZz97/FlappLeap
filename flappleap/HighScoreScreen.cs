@@ -32,7 +32,7 @@ namespace FlappLeap
         private string spriteFontButton;
 
         List<HighScore> ReadHighScores = new List<HighScore>();
-        public HighScoreScreen(FlappLeapGame game) : base(game)
+        public HighScoreScreen(FlappLeapGame game, bool multiplayer = false) : base(game)
         {
             gameWidth = game.Graphics.PreferredBackBufferWidth; //1920
             gameHeight = game.Graphics.PreferredBackBufferHeight; // 1080
