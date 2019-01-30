@@ -16,8 +16,17 @@ namespace FlappLeap
 {
     public class PlayScreen : GameScreen
     {
+        const float SPEED_INCREMENT = 1.2f;
+        const int SPEED_LEVEL_DIFFICULTY_INCREASE = 10;
+        const int MAX_SPEED = 2;
+
+        const int OBSTACLE_DISTANCE_LEVEL_DIFFICULTY_INCREASE = 20;
+        const int MINIMUM_OBSTACLE_DISTANCE = 500;
+
+        const int GAPSIZE_SPEED_LEVEL_DIFFICULTY_INCREASE = 30;
+        const int MINIMUM_GAPSIZE = 150;
         private Button BackButton { get; set; }
-        private Button HighScoreButton{ get; set; }
+        private Button HighScoreButton { get; set; }
         public bool MultiplayerOn { get; set; }
         private SpriteFont gameFontBig;
         private SpriteFont gameFontSmall;
@@ -28,6 +37,9 @@ namespace FlappLeap
         private Floor Floor;
         private Player PlayerOne;
         private Player PlayerTwo;
+
+        public int BestScoreInGame { get; set; }
+        public float DifficultyMultiplicator { get; set; }
 
         // Textures are designed for 720p, screen is upsclaed with the ScreenRation property
         private const int PlayScreen_WIDTH = 1280;
@@ -67,6 +79,8 @@ namespace FlappLeap
             GameState = GameStates.Waiting;
             playerOneScore = 0;
             playerTwoScore = 0;
+            this.BestScoreInGame = 0;
+            this.DifficultyMultiplicator = 1;
             this.MultiplayerOn = multiplayerOn;
         }
 
@@ -74,7 +88,8 @@ namespace FlappLeap
         {
             TotalPlayTime = 0;
             NextGenerated = 0;
-
+            Obstacle.RespawnRange = 3000;
+            Obstacle.GapSize = 300;
             spriteFontButton = "FontSmall";
 
             gameFontBig = Game.Content.Load<SpriteFont>("FontBig");
@@ -124,7 +139,7 @@ namespace FlappLeap
         }
 
         public override void Update(GameTime gameTime)
-          {
+        {
             // Keyboard input to jump
             KeyboardState state = Keyboard.GetState();
             TotalPlayTime += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -139,9 +154,9 @@ namespace FlappLeap
 
 
 
-            if(this.MultiplayerOn)
+            if (this.MultiplayerOn)
             {
-                if(PlayerOne.Dead && PlayerTwo.Dead)
+                if (PlayerOne.Dead && PlayerTwo.Dead)
                 {
                     bool found = false;
                     foreach (var xD in Game.Components)
@@ -156,15 +171,15 @@ namespace FlappLeap
 
                     Sprite.WithCollision.Add(Floor);
 
-                    if (state.IsKeyDown(Keys.Space) || this.FlappLeapGame.JumpRequested)
+                    if (state.IsKeyDown(Keys.R))
                     {
-                        this.FlappLeapGame.JumpRequested = false;
-                        PlayerOne.Reset();
-                        PlayerTwo.Reset(true);
+                        Dispose();
+                        Initialize();
                         playerOneScore = 0;
                         playerTwoScore = 0;
-                        GameState = GameStates.Waiting;
+
                         WaitingFor = TotalPlayTime;
+                        GameState = GameStates.Waiting;
 
                         this.Game.Components.Remove(this.HighScoreButton);
 
@@ -175,7 +190,7 @@ namespace FlappLeap
             }
             else
             {
-                if(PlayerOne.Dead)
+                if (PlayerOne.Dead)
                 {
                     bool found = false;
                     foreach (var xD in Game.Components)
@@ -190,10 +205,10 @@ namespace FlappLeap
 
                     Sprite.WithCollision.Add(Floor);
 
-                    if (state.IsKeyDown(Keys.Space) || this.FlappLeapGame.JumpRequested)
+                    if (state.IsKeyDown(Keys.R) || this.FlappLeapGame.JumpRequested)
                     {
-                        this.FlappLeapGame.JumpRequested = false;
-                        PlayerOne.Reset();
+                        Dispose();
+                        Initialize();
                         playerOneScore = 0;
                         GameState = GameStates.Waiting;
                         WaitingFor = TotalPlayTime;
@@ -205,22 +220,26 @@ namespace FlappLeap
                     }
                 }
             }
-            
+
 
             // Scrolling Backgrounds
             foreach (Background bg in Background)
                 bg.Update(gameTime);
 
+            
+
             // updates the obstacles
             foreach (Obstacle[] obs in Obstacles)
             {
-                obs[0].Update(gameTime, GraphicsDevice.Viewport);
-                obs[1].Update(gameTime, GraphicsDevice.Viewport);
+
+                obs[0].Update(gameTime, GraphicsDevice.Viewport, this.DifficultyMultiplicator);
+                obs[1].Update(gameTime, GraphicsDevice.Viewport, this.DifficultyMultiplicator);
             }
 
 
             if (TotalPlayTime >= NextGenerated && GameState == GameStates.Playing)
             {
+                
                 int MaxGap = (Constants.GAME_HEIGHT - Floor.Bounds.Height) - (int)(Obstacle.GapSize * ScreenRatio);
                 int GapPosition = new Random().Next(0, MaxGap);
                 Obstacle Top = new Obstacle(Game.Content.Load<Texture2D>(@"Images/Obstacles/wall"), Vector2.Zero, ScreenRatio);
@@ -229,6 +248,26 @@ namespace FlappLeap
                 Top.Position.X = Bottom.Position.X = Constants.GAME_WIDTH + Top.Texture.Width;
                 Top.Position.Y = GapPosition - Top.Bounds.Height;
                 Bottom.Position.Y = GapPosition + (int)(Obstacle.GapSize * ScreenRatio);
+
+                if (this.BestScoreInGame != 0)
+                {
+                    if (this.BestScoreInGame % SPEED_LEVEL_DIFFICULTY_INCREASE == 0 && this.DifficultyMultiplicator < MAX_SPEED)
+                    {
+                        this.DifficultyMultiplicator *= SPEED_INCREMENT;
+                    }
+
+                    if (this.BestScoreInGame % OBSTACLE_DISTANCE_LEVEL_DIFFICULTY_INCREASE == 0 && Obstacle.RespawnRange > MINIMUM_OBSTACLE_DISTANCE)
+                    {
+                        Obstacle.RespawnRange /= 3;
+                    }
+
+                    if (this.BestScoreInGame % GAPSIZE_SPEED_LEVEL_DIFFICULTY_INCREASE == 0 && Obstacle.GapSize > MINIMUM_GAPSIZE)
+                    {
+                        Obstacle.GapSize = Obstacle.GapSize - Obstacle.GapSize / 3;
+                    }
+                }
+                
+
 
                 Obstacles.Add(new Obstacle[]
                 {
@@ -247,34 +286,43 @@ namespace FlappLeap
                     // The obstacles got out of the screen thus the player survived it
                     playerOneScore++;
                 }
+
+
+                if (this.MultiplayerOn && obs[0].OutOfScreen && !PlayerTwo.Dead)
+                {
+                    // The obstacles got out of the screen thus the player survived it
+                    playerTwoScore++;
+                }
             }
 
             // Removes all the obstacles that are out of the screen
             Obstacles.RemoveAll(obs => obs[0].OutOfScreen);
 
             // updates the floor
-            Floor.Update(gameTime, ScreenRatio);
+            Floor.Update(gameTime, ScreenRatio, this.DifficultyMultiplicator);
 
 
             // If the game is waiting, the player isn't updated
             if (GameState == GameStates.Waiting)
             {
-                if ((state.IsKeyDown(Keys.Space) || this.FlappLeapGame.JumpRequested) && TotalPlayTime > WaitingFor + 1000)
+                if ((state.IsKeyDown(Keys.S) || this.FlappLeapGame.JumpRequested) && TotalPlayTime > WaitingFor + 1000)
                 {
-                    this.FlappLeapGame.JumpRequested = false;
+
+                    //this.FlappLeapGame.JumpRequested = false;
                     // The player started playing
                     GameState = GameStates.Playing;
                 }
             }
             else
             {
-                if(this.MultiplayerOn)
+                if (this.MultiplayerOn)
                 {
                     PlayerTwo.Update(gameTime, ScreenRatio);
                 }
                 PlayerOne.Update(gameTime, ScreenRatio);
             }
 
+            this.BestScoreInGame = playerOneScore > playerTwoScore ? playerOneScore : playerTwoScore;
             base.Update(gameTime);
         }
 
@@ -298,22 +346,27 @@ namespace FlappLeap
             // Draws the floor and the player
             Floor.Draw(Sb, FlappLeapGame.Graphics);
             PlayerOne.Draw(Sb, FlappLeapGame.Graphics);
-            PlayerTwo.Draw(Sb, FlappLeapGame.Graphics);
+            if (this.MultiplayerOn) PlayerTwo.Draw(Sb, FlappLeapGame.Graphics);
+
 
             if (GameState == GameStates.Waiting)
             {
-                this.FlappLeapGame.detectClap = true;
+                //this.FlappLeapGame.detectClap = true;
 
                 // Shows a tutorial
-                string tutorialJump = "Press space to start !";
+                string tutorialJump = "Press S to start !";
                 Vector2 FontOrigin = (Constants.Screen / 2) - gameFontBig.MeasureString(tutorialJump) / 2;
                 Sb.DrawString(gameFontBig, tutorialJump, FontOrigin + new Vector2(2, 2), Color.White);
                 Sb.DrawString(gameFontBig, tutorialJump, FontOrigin, Color.Red);
             }
 
             // Generate the score string
-            string scoreString = string.Format("Score : {0}", playerOneScore.ToString());
-            Vector2 ScoreOrigin = (Constants.Screen / 2) - gameFontBig.MeasureString(scoreString) / 2;
+            string scorePlayerOneString = string.Format("Score : {0}", playerOneScore.ToString());
+            Vector2 ScoreOriginOne = (Constants.Screen / 2) - gameFontBig.MeasureString(scorePlayerOneString) / 2;
+            string scorePlayerTwoString = string.Format("Score : {0}", playerTwoScore.ToString());
+            Vector2 ScoreOriginTwo = (Constants.Screen / 2) - gameFontBig.MeasureString(scorePlayerTwoString) / 2;
+
+
 
             if (GameState == GameStates.Dead)
             {
@@ -327,20 +380,33 @@ namespace FlappLeap
                 Sb.Draw(pixel, new Rectangle(0, 0, Constants.GAME_WIDTH, Constants.GAME_HEIGHT), Color.Black * 0.5f);
 
                 // You died message
-                string youDied = "You Died! Press space to try again.";
+                string youDied = "You Died! Press R to try again.";
                 Vector2 youDiedOrigin = (Constants.Screen / 2) - gameFontBig.MeasureString(youDied) / 2;
                 Sb.DrawString(gameFontBig, youDied, youDiedOrigin + new Vector2(2, 2), Color.White);
                 Sb.DrawString(gameFontBig, youDied, youDiedOrigin, Color.Red);
 
                 // The score
-                Sb.DrawString(gameFontBig, scoreString, ScoreOrigin + new Vector2(0, 100 * ScreenRatio) + new Vector2(2, 2), Color.White);
-                Sb.DrawString(gameFontBig, scoreString, ScoreOrigin + new Vector2(0, 100 * ScreenRatio), Color.Red);
+                Sb.DrawString(gameFontBig, scorePlayerOneString, ScoreOriginOne + new Vector2(0, 100 * ScreenRatio) + new Vector2(2, 2), Color.White);
+                Sb.DrawString(gameFontBig, scorePlayerOneString, ScoreOriginOne + new Vector2(0, 100 * ScreenRatio), Color.Red);
+
+                if (MultiplayerOn)
+                {
+                    Sb.DrawString(gameFontBig, scorePlayerTwoString, ScoreOriginTwo + new Vector2(200, 100 * ScreenRatio) + new Vector2(2, 2), Color.White);
+                    Sb.DrawString(gameFontBig, scorePlayerTwoString, ScoreOriginTwo + new Vector2(200, 100 * ScreenRatio), Color.Red);
+                }
+
             }
             else
             {
                 // The score
-                Sb.DrawString(gameFontBig, scoreString, new Vector2(0, 300 * ScreenRatio) + ScoreOrigin + new Vector2(2, 2), Color.White);
-                Sb.DrawString(gameFontBig, scoreString, new Vector2(0, 300 * ScreenRatio) + ScoreOrigin, Color.Red);
+                Sb.DrawString(gameFontBig, scorePlayerOneString, new Vector2(0, 100 * ScreenRatio) + ScoreOriginOne + new Vector2(2, 2), Color.White);
+                Sb.DrawString(gameFontBig, scorePlayerOneString, new Vector2(0, 100 * ScreenRatio) + ScoreOriginOne, Color.Red);
+
+                if (MultiplayerOn)
+                {
+                    Sb.DrawString(gameFontBig, scorePlayerTwoString, new Vector2(200, 100 * ScreenRatio) + ScoreOriginTwo + new Vector2(2, 2), Color.White);
+                    Sb.DrawString(gameFontBig, scorePlayerTwoString, new Vector2(200, 100 * ScreenRatio) + ScoreOriginTwo, Color.Red);
+                }
             }
 
             Sb.End();
@@ -367,6 +433,9 @@ namespace FlappLeap
             Background.Clear();
             Obstacles.Clear();
             PlayerOne.Reset();
+            if (this.MultiplayerOn) PlayerTwo.Reset();
+            this.BestScoreInGame = 0;
+            this.DifficultyMultiplicator = 1;
             Sprite.WithCollision.Clear();
         }
     }
