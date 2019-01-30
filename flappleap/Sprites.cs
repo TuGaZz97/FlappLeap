@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -60,19 +61,19 @@ namespace FlappLeap
         public Obstacle(Texture2D Texture, Vector2 Position, float Zoom)
             : base(Texture, Zoom, true)
         {
-            speed = new Vector2(300 * Zoom, 300 * Zoom);
+            speed = new Vector2(500 * Zoom, 500 * Zoom);
             direction = new Vector2(1, 0);
             this.Position = Position;
         }
 
-        public void Update(GameTime gametime, Viewport viewport)
+        public void Update(GameTime gametime, Viewport viewport, float difficultyMultiplicator)
         {
             float elapsed = (float)gametime.ElapsedGameTime.TotalSeconds;
 
             Viewport = viewport;
 
             //Calculate the distance to move our image, based on speed
-            Vector2 distance = direction * speed * elapsed;
+            Vector2 distance =  direction * speed * difficultyMultiplicator * elapsed;
 
             Position -= distance;
         }
@@ -93,11 +94,11 @@ namespace FlappLeap
             : base(texture, Zoom, true)
         {
             offset = Vector2.Zero;
-            Speed = new Vector2(300 * Zoom, 300 * Zoom);
+            Speed = new Vector2(500 * Zoom, 500 * Zoom);
             Position = new Vector2(0, Constants.GAME_HEIGHT - Bounds.Height);
         }
 
-        public void Update(GameTime gametime, float Zoom)
+        public void Update(GameTime gametime, float Zoom, float difficultyMultiplicator)
         {
             float elapsed = (float)gametime.ElapsedGameTime.TotalSeconds;
             Vector2 direction = new Vector2(1, 0);
@@ -105,7 +106,7 @@ namespace FlappLeap
             base.Zoom = Zoom;
 
             //Calculate the distance to move our image, based on speed
-            Vector2 distance = direction * Speed * elapsed;
+            Vector2 distance = direction * Speed * difficultyMultiplicator * elapsed;
 
             //Update our offset, the floor's position doesn't actually ever moves
             offset -= distance;
@@ -128,6 +129,7 @@ namespace FlappLeap
     {
         private Vector2 speed;
         private bool dead;
+        public bool IsPlayerTwo { get; set; }
         public bool Dead
         {
             get
@@ -143,27 +145,29 @@ namespace FlappLeap
         public Player(Texture2D Texture, float Zoom, bool isPlayerTwo = false)
             : base(Texture, Zoom, true)
         {
-            if(isPlayerTwo)
+            this.IsPlayerTwo = isPlayerTwo;
+
+            if(this.IsPlayerTwo)
             {
-                Position = new Vector2((Constants.GAME_WIDTH / 3) - (Bounds.Width / 2), 200 * Zoom);
+                Position = new Vector2((Constants.GAME_WIDTH / 2) - (Bounds.Width / 2), 200 * Zoom);
             }
             else
             {
-                Position = new Vector2((Constants.GAME_WIDTH / 2) - (Bounds.Width / 2), 200 * Zoom);
+                Position = new Vector2((Constants.GAME_WIDTH / 3) - (Bounds.Width / 2), 200 * Zoom);
             }
             
             Dead = false;
         }
 
-        public void Reset(bool isPlayerTwo = false)
+        public void Reset()
         {
-            if (isPlayerTwo)
+            if (this.IsPlayerTwo)
             {
-                Position = new Vector2((Constants.GAME_WIDTH / 3) - (Bounds.Width / 2), 200 * Zoom);
+                Position = new Vector2((Constants.GAME_WIDTH / 2) - (Bounds.Width / 2), 200 * Zoom);
             }
             else
             {
-                Position = new Vector2((Constants.GAME_WIDTH / 2) - (Bounds.Width / 2), 200 * Zoom);
+                Position = new Vector2((Constants.GAME_WIDTH / 3) - (Bounds.Width / 2), 200 * Zoom);
             }
             Dead = false;
             speed = Vector2.Zero;
@@ -184,16 +188,30 @@ namespace FlappLeap
             // Keyboard input to jump
             KeyboardState state = Keyboard.GetState();
 
-            if (state.IsKeyDown(Keys.Space) && !Dead)
+            
+            if(this.IsPlayerTwo)
             {
-                Jump();
+                if (state.IsKeyDown(Keys.Up) && !Dead)
+                {
+                    Jump();
+                }
             }
+            else
+            {
+                if (state.IsKeyDown(Keys.Space) && !Dead)
+                {
+                    Jump();
+                }
+            }
+
+            
 
             if ((this.IsCollidingWithAny() || Position.Y < - (Bounds.Height * 2)) && !Dead)
             {
                 DeathJump();
                 Dead = true;
-                Sprite.WithCollision.Clear();
+                Sprite.WithCollision.Remove(this);
+                
             }
         }
 
