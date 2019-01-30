@@ -16,7 +16,7 @@ namespace FlappLeap
 {
     public class PlayScreen : GameScreen
     {
-        const float SPEED_INCREMENT = 1.2f;
+        const float SPEED_INCREMENT = 1.4f;
         const int SPEED_LEVEL_DIFFICULTY_INCREASE = 10;
         const int MAX_SPEED = 2;
 
@@ -84,6 +84,7 @@ namespace FlappLeap
         {
             TotalPlayTime = 0;
             NextGenerated = 0;
+            this.DifficultyMultiplicator = 1;
             Obstacle.RespawnRange = 3000;
             Obstacle.GapSize = 300;
             spriteFontButton = "FontSmall";
