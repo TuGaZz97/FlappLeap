@@ -38,7 +38,7 @@ namespace FlappLeap
             this.Font = this.Game.Content.Load<SpriteFont>("FontBig");
             FlappSong = this.Game.Content.Load<Song>("Musiques/FlappLeapMusic");
             
-            MediaPlayer.Play(FlappSong);
+            //MediaPlayer.Play(FlappSong);
 
             base.LoadContent();
         }

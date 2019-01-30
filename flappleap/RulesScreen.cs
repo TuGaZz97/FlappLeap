@@ -1,9 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using Leap;
+﻿/*
+ * Micael Rodrigues
+ * T.IS-E2
+ */
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace FlappLeap
 {
@@ -20,9 +23,13 @@ namespace FlappLeap
         private int gameHeight;
         private int sizeButtonTouch;
 
+        private string text_But = "BUT\r\n Le but de FlappLeap est d'effectuer le score le plus eleve en traverssant les differents obstacles. /r/n";
+        private string text_Touches = "TOUCHES\r\n Les differentes touchent du jeu: \r\n S pour demarrer la partie  \r\n R pour recommencer apres la mort,  \r\n Space pour voler \r\n En mode multijoueur la fleche du haut pour faire sauter le deuxieme personnage.";
+        private string text_Difficulte = "DIFFICULTE\r\n La difficulte du jeu est crescendo par rapport au score dans le jeu, la vitesse et les obstacles sont multiplies";
+
         private string spriteFontButton;
 
-        public RulesScreen(FlappLeapGame game) : base(game)
+        public RulesScreen(FlappLeapGame game, bool multiplayer = false) : base(game)
         {
             gameWidth = game.Graphics.PreferredBackBufferWidth; //1920
             gameHeight = game.Graphics.PreferredBackBufferHeight; // 1080
@@ -56,8 +63,9 @@ namespace FlappLeap
         public override void Draw(GameTime gameTime)
         {
             this.Sb.Begin();
-            this.Sb.DrawString(this.FlappyFont, "Bienvenue dans Flapp", new Vector2(gameWidth / 70, gameHeight / 18), Color.White);
-            this.Sb.DrawString(this.FlappyFont, "Voici les règles", new Vector2(gameWidth / 70, gameHeight / 9), Color.White);
+            this.Sb.DrawString(this.FlappyFont, "Bienvenue dans FlappLeap", new Vector2(gameWidth / 70, gameHeight / 18), Color.White);
+            this.Sb.DrawString(this.FlappyFont, text_But + "\r\n" + "\r\n" + text_Touches + "\r\n" + "\r\n" + text_Difficulte, new Vector2(gameWidth / 70, gameHeight / 9), Color.White);
+            
 
             this.Sb.End();
             base.Draw(gameTime);
