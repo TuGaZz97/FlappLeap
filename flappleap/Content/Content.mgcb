@@ -160,15 +160,15 @@
 /processorParam:Quality=Best
 /build:Musiques/FlappLeapMusic.mp3
 
-#begin Musiques/AboiementGrosChien_Découpé.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
+#begin Musiques/AboiementPtiChien_Découpé.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Musiques/AboiementGrosChien_Découpé.mp3
+/build:Musiques/AboiementPtiChien_Découpé.wav
 
-#begin Musiques/AboiementPtiChien_Découpé.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
+#begin Musiques/AboiementGrosChien_Découpé.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Musiques/AboiementPtiChien_Découpé.mp3
+/build:Musiques/AboiementGrosChien_Découpé.wav
 

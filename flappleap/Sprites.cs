@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -12,6 +13,7 @@ namespace FlappLeap
         //private Viewport Viewport;      //Our game viewport
         private Vector2 offset;         //Offset to start drawing our image
         public Vector2 Speed;           //Speed of movement of our parallax effect
+
 
         public Background(Texture2D texture, Vector2 speed, bool hasCollision = false)
             : base(texture, 1, hasCollision)
@@ -129,6 +131,7 @@ namespace FlappLeap
     {
         private Vector2 speed;
         private bool dead;
+        public SoundEffect EffectDog { get; set; }
         public bool IsPlayerTwo { get; set; }
         public bool Dead
         {
@@ -142,18 +145,21 @@ namespace FlappLeap
             }
         }
 
-        public Player(Texture2D Texture, float Zoom, bool isPlayerTwo = false)
+        public Player(Texture2D Texture, float Zoom, SoundEffect se, bool isPlayerTwo = false)
             : base(Texture, Zoom, true)
         {
             this.IsPlayerTwo = isPlayerTwo;
+            this.EffectDog = se;
 
             if(this.IsPlayerTwo)
             {
                 Position = new Vector2((Constants.GAME_WIDTH / 2) - (Bounds.Width / 2), 200 * Zoom);
+                
             }
             else
             {
                 Position = new Vector2((Constants.GAME_WIDTH / 3) - (Bounds.Width / 2), 200 * Zoom);
+                
             }
             
             Dead = false;
@@ -174,7 +180,10 @@ namespace FlappLeap
         }
 
         public void Update(GameTime gametime, float Zoom)
-        {
+        { 
+            //sound Effect
+            /**/
+
             base.Zoom = Zoom;
             float elapsed = (float)gametime.ElapsedGameTime.TotalSeconds;
             Vector2 direction = new Vector2(0, 1);
@@ -194,6 +203,7 @@ namespace FlappLeap
                 if (state.IsKeyDown(Keys.Up) && !Dead)
                 {
                     Jump();
+                    this.EffectDog.Play();
                 }
             }
             else
@@ -201,6 +211,7 @@ namespace FlappLeap
                 if (state.IsKeyDown(Keys.Space) && !Dead)
                 {
                     Jump();
+                    this.EffectDog.Play();
                 }
             }
 
@@ -236,7 +247,7 @@ namespace FlappLeap
     }
 
 
-    public abstract class Sprite
+    public abstract class Sprite :  Microsoft.Xna.Framework.Game
     {
         // List of all sprites
         public static List<Sprite> WithCollision;

@@ -62,10 +62,6 @@ namespace FlappLeap
         private int playerOneScore;
         private int playerTwoScore;
 
-        //Sound Effect
-        private SoundEffect effectDog1;
-        private SoundEffect effectDog2;
-
         private GameStates GameState;
         private enum GameStates
         {
@@ -104,13 +100,13 @@ namespace FlappLeap
             };
 
             //sound Effect
-            effectDog1 = Game.Content.Load<SoundEffect>("Musiques/AboiementPtiChien_Découpé");
-            effectDog2 = Game.Content.Load<SoundEffect>("Musiques/AboiementGrosChien_Découpé");
+            SoundEffect effectDog1 = Game.Content.Load<SoundEffect>("Musiques/AboiementPtiChien_Découpé");
+            SoundEffect effectDog2 = Game.Content.Load<SoundEffect>("Musiques/AboiementGrosChien_Découpé");
 
             Obstacles = new List<Obstacle[]>(); // array of 2 obstacles, Top and Bottom
             Floor = new Floor(Game.Content.Load<Texture2D>(@"Images\Obstacles\floor"), ScreenRatio);
-            PlayerOne = new Player(Game.Content.Load<Texture2D>(@"Images\doge"), ScreenRatio);
-            if (this.MultiplayerOn) PlayerTwo = new Player(Game.Content.Load<Texture2D>(@"Images\LilSleepy"), ScreenRatio, true);
+            PlayerOne = new Player(Game.Content.Load<Texture2D>(@"Images\doge"), ScreenRatio, effectDog1);
+            if (this.MultiplayerOn) PlayerTwo = new Player(Game.Content.Load<Texture2D>(@"Images\LilSleepy"), ScreenRatio, effectDog2, true);
 
             // Back button
             this.BackButton = new Button(this.Game, "Back", 20, Constants.GAME_HEIGHT - 100, 150, 50, spriteFontButton);
@@ -148,8 +144,6 @@ namespace FlappLeap
             {
                 this.FlappLeapGame.JumpRequested = false;
                 PlayerOne.Jump();
-                effectDog1.Play();
-               
             }
 
 
