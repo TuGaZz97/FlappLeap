@@ -16,7 +16,7 @@ namespace FlappLeap
 {
     public class PlayScreen : GameScreen
     {
-        const float SPEED_INCREMENT = 1.4f;
+        const float SPEED_INCREMENT = 1.2f;
         const int SPEED_LEVEL_DIFFICULTY_INCREASE = 10;
         const int MAX_SPEED = 2;
 
@@ -25,6 +25,8 @@ namespace FlappLeap
 
         const int GAPSIZE_SPEED_LEVEL_DIFFICULTY_INCREASE = 30;
         const int MINIMUM_GAPSIZE = 150;
+
+
         private Button BackButton { get; set; }
         private Button HighScoreButton { get; set; }
         public bool MultiplayerOn { get; set; }
@@ -84,6 +86,7 @@ namespace FlappLeap
         {
             TotalPlayTime = 0;
             NextGenerated = 0;
+            this.BestScoreInGame = 0;
             this.DifficultyMultiplicator = 1;
             Obstacle.RespawnRange = 3000;
             Obstacle.GapSize = 300;
@@ -101,7 +104,8 @@ namespace FlappLeap
             };
 
             //sound Effect
-            SoundEffect effectDog1 = Game.Content.Load<SoundEffect>("Musiques/AboiementPtiChien_Découpé");
+            //SoundEffect effectDog1 = Game.Content.Load<SoundEffect>("Musiques/AboiementPtiChien_Découpé");
+            SoundEffect effectDog1 = Game.Content.Load<SoundEffect>("Musiques/AboiementGrosChien_Découpé");
             SoundEffect effectDog2 = Game.Content.Load<SoundEffect>("Musiques/AboiementGrosChien_Découpé");
 
             Obstacles = new List<Obstacle[]>(); // array of 2 obstacles, Top and Bottom
@@ -113,7 +117,7 @@ namespace FlappLeap
             this.BackButton = new Button(this.Game, "Back", 20, Constants.GAME_HEIGHT - 100, 150, 50, spriteFontButton);
             this.BackButton.Click += BackButton_Click;
 
-            // Back button
+            // High score button
             string highscoreText = "Save your score";
             this.HighScoreButton = new Button(this.Game, highscoreText, (Constants.GAME_WIDTH / 2) - 150, 50, 300, 50, spriteFontButton);
             this.HighScoreButton.Click += HighScoreButton_Click;
@@ -126,7 +130,7 @@ namespace FlappLeap
         private void HighScoreButton_Click(object sender, MouseState e)
         {
             OnClose();
-            this.FlappLeapGame.ChangeScreen(typeof(AddHighScoreScreen), playerOneScore);
+            this.FlappLeapGame.ChangeScreen(typeof(AddHighScoreScreen), this.BestScoreInGame);
         }
 
         private void BackButton_Click(object sender, MouseState e)
@@ -429,7 +433,6 @@ namespace FlappLeap
             Obstacles.Clear();
             PlayerOne.Reset();
             if (this.MultiplayerOn) PlayerTwo.Reset();
-            this.BestScoreInGame = 0;
             this.DifficultyMultiplicator = 1;
             Sprite.WithCollision.Clear();
         }

@@ -247,7 +247,7 @@ namespace FlappLeap
     }
 
 
-    public abstract class Sprite //:  Microsoft.Xna.Framework.Game
+    public abstract class Sprite
     {
         // List of all sprites
         public static List<Sprite> WithCollision;
