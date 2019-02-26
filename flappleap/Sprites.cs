@@ -200,7 +200,7 @@ namespace FlappLeap
             
             if(this.IsPlayerTwo)
             {
-                if (state.IsKeyDown(Keys.Up) && !Dead)
+                if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.D1) && !Dead)
                 {
                     Jump();
                     this.EffectDog.Play();
@@ -208,7 +208,7 @@ namespace FlappLeap
             }
             else
             {
-                if (state.IsKeyDown(Keys.Space) && !Dead)
+                if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.V) && !Dead)
                 {
                     Jump();
                     this.EffectDog.Play();

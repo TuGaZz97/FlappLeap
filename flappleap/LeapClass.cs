@@ -26,6 +26,7 @@ namespace FlappLeap
             int appHeight = 1080;
 
             // Box interaction
+
             InteractionBox iBox = frame.InteractionBox;
 
             // Getting the hand and then the finger
@@ -34,6 +35,7 @@ namespace FlappLeap
 
             Vector leapPoint = finger.StabilizedTipPosition;
             Vector normalizedPoint = iBox.NormalizePoint(leapPoint, false);
+            
 
             float appX = normalizedPoint.x * appWidth;
             float appY = (1 - normalizedPoint.y) * appHeight;

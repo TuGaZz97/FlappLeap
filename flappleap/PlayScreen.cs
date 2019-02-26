@@ -170,7 +170,7 @@ namespace FlappLeap
 
                     Sprite.WithCollision.Add(Floor);
 
-                    if (state.IsKeyDown(Keys.R))
+                    if (state.IsKeyDown(Keys.R) || state.IsKeyDown(Keys.D7))
                     {
                         Dispose();
                         Initialize();
@@ -204,7 +204,7 @@ namespace FlappLeap
 
                     Sprite.WithCollision.Add(Floor);
 
-                    if (state.IsKeyDown(Keys.R) || this.FlappLeapGame.JumpRequested)
+                    if (state.IsKeyDown(Keys.R) || state.IsKeyDown(Keys.D7) || this.FlappLeapGame.JumpRequested)
                     {
                         Dispose();
                         Initialize();
@@ -304,7 +304,7 @@ namespace FlappLeap
             // If the game is waiting, the player isn't updated
             if (GameState == GameStates.Waiting)
             {
-                if ((state.IsKeyDown(Keys.S) || this.FlappLeapGame.JumpRequested) && TotalPlayTime > WaitingFor + 1000)
+                if ((state.IsKeyDown(Keys.S) || state.IsKeyDown(Keys.D8) || this.FlappLeapGame.JumpRequested) && TotalPlayTime > WaitingFor + 1000)
                 {
 
                     //this.FlappLeapGame.JumpRequested = false;
@@ -353,7 +353,7 @@ namespace FlappLeap
                 //this.FlappLeapGame.detectClap = true;
 
                 // Shows a tutorial
-                string tutorialJump = "Press S to start !";
+                string tutorialJump = "Press $ to start !";
                 Vector2 FontOrigin = (Constants.Screen / 2) - gameFontBig.MeasureString(tutorialJump) / 2;
                 Sb.DrawString(gameFontBig, tutorialJump, FontOrigin + new Vector2(2, 2), Color.White);
                 Sb.DrawString(gameFontBig, tutorialJump, FontOrigin, Color.Red);
@@ -379,7 +379,7 @@ namespace FlappLeap
                 Sb.Draw(pixel, new Rectangle(0, 0, Constants.GAME_WIDTH, Constants.GAME_HEIGHT), Color.Black * 0.5f);
 
                 // You died message
-                string youDied = "You Died! Press R to try again.";
+                string youDied = "You Died! Press Man to try again.";
                 Vector2 youDiedOrigin = (Constants.Screen / 2) - gameFontBig.MeasureString(youDied) / 2;
                 Sb.DrawString(gameFontBig, youDied, youDiedOrigin + new Vector2(2, 2), Color.White);
                 Sb.DrawString(gameFontBig, youDied, youDiedOrigin, Color.Red);
