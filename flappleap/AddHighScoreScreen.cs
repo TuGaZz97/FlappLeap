@@ -21,6 +21,8 @@ namespace FlappLeap
         private Button AddScore { get; set; }
         private Button BackButton { get; set; }
         private Button Backspace { get; set; }
+        private int MouseX { get; set; }
+        private int MouseY { get; set; }
 
         public string Pseudo
         {
@@ -93,6 +95,9 @@ namespace FlappLeap
                 }
 
             }
+
+            this.MouseX = PlayScreen.MouseX;
+            this.MouseY = PlayScreen.MouseY;
 
             // Event for all buttons
             this.AddScore.Click += this.Add_Click;
@@ -171,6 +176,34 @@ namespace FlappLeap
             this.Sb.DrawString(this.FlappyFont, "PSEUDO :", new Vector2(Convert.ToInt32(gameWidth / 4), Convert.ToInt32(gameHeight / 4.5)), Color.White);
             this.Sb.DrawString(this.FlappyFont, Pseudo, new Vector2(Convert.ToInt32(gameWidth / 2), Convert.ToInt32(gameHeight / 4.5)), Color.White);
             this.Sb.End();
+
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.D))
+            {
+                this.MouseX += TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+
+            }
+
+            if (state.IsKeyDown(Keys.S))
+            {
+                this.MouseY += TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+            }
+
+            if (state.IsKeyDown(Keys.A))
+            {
+                this.MouseX -= TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+            }
+
+            if (state.IsKeyDown(Keys.W))
+            {
+                this.MouseY -= TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+            }
+
             base.Draw(gameTime);
         }
 

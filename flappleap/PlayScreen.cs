@@ -42,6 +42,8 @@ namespace FlappLeap
 
         public int BestScoreInGame { get; set; }
         public float DifficultyMultiplicator { get; set; }
+        static public int MouseX { get; set; }
+        static public int MouseY { get; set; }
 
         // Textures are designed for 720p, screen is upsclaed with the ScreenRation property
         private const int PlayScreen_WIDTH = 1280;
@@ -103,6 +105,9 @@ namespace FlappLeap
                 new Background(Game.Content.Load<Texture2D>(@"Images\Backgrounds\layer_03"), new Vector2(100, 100)),
             };
 
+            MouseX = GraphicsDevice.Viewport.Width / 2;
+            MouseY = GraphicsDevice.Viewport.Height / 2;
+
             //sound Effect
             //SoundEffect effectDog1 = Game.Content.Load<SoundEffect>("Musiques/AboiementPtiChien_Découpé");
             SoundEffect effectDog1 = Game.Content.Load<SoundEffect>("Musiques/AboiementGrosChien_Découpé");
@@ -110,8 +115,10 @@ namespace FlappLeap
 
             Obstacles = new List<Obstacle[]>(); // array of 2 obstacles, Top and Bottom
             Floor = new Floor(Game.Content.Load<Texture2D>(@"Images\Obstacles\floor"), ScreenRatio);
+            
             PlayerOne = new Player(Game.Content.Load<Texture2D>(@"Images\doge"), ScreenRatio, effectDog1);
             if (this.MultiplayerOn) PlayerTwo = new Player(Game.Content.Load<Texture2D>(@"Images\LilSleepy"), ScreenRatio, effectDog2, true);
+            
 
             // Back button
             this.BackButton = new Button(this.Game, "Back", 20, Constants.GAME_HEIGHT - 100, 150, 50, spriteFontButton);
@@ -210,6 +217,7 @@ namespace FlappLeap
                         Initialize();
                         playerOneScore = 0;
                         GameState = GameStates.Waiting;
+                        
                         WaitingFor = TotalPlayTime;
 
                         this.Game.Components.Remove(this.HighScoreButton);
@@ -304,7 +312,7 @@ namespace FlappLeap
             // If the game is waiting, the player isn't updated
             if (GameState == GameStates.Waiting)
             {
-                if ((state.IsKeyDown(Keys.S) || state.IsKeyDown(Keys.D8) || this.FlappLeapGame.JumpRequested) && TotalPlayTime > WaitingFor + 1000)
+                if ((/*state.IsKeyDown(Keys.S) ||*/ state.IsKeyDown(Keys.D8) || this.FlappLeapGame.JumpRequested) && TotalPlayTime > WaitingFor + 1000)
                 {
 
                     //this.FlappLeapGame.JumpRequested = false;
@@ -329,9 +337,11 @@ namespace FlappLeap
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            KeyboardState state = Keyboard.GetState();
+
             Sb.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
 
-            // Draws the backgrounds
+
             foreach (Background bg in Background)
                 bg.Draw(Sb, FlappLeapGame.Graphics);
 
@@ -342,11 +352,42 @@ namespace FlappLeap
                 obs[1].Draw(Sb, FlappLeapGame.Graphics);
             }
 
-            // Draws the floor and the player
+
             Floor.Draw(Sb, FlappLeapGame.Graphics);
             PlayerOne.Draw(Sb, FlappLeapGame.Graphics);
             if (this.MultiplayerOn) PlayerTwo.Draw(Sb, FlappLeapGame.Graphics);
+            
 
+
+            if(GameState == GameStates.Waiting || GameState == GameStates.Dead)
+            {
+                
+
+                if (state.IsKeyDown(Keys.D))
+                {
+                    MouseX += TitleScreen.CURSOR_SPEED;
+                    Mouse.SetPosition(MouseX, MouseY);
+
+                }
+
+                if (state.IsKeyDown(Keys.S))
+                {
+                    MouseY += TitleScreen.CURSOR_SPEED;
+                    Mouse.SetPosition(MouseX, MouseY);
+                }
+
+                if (state.IsKeyDown(Keys.A))
+                {
+                    MouseX -= TitleScreen.CURSOR_SPEED;
+                    Mouse.SetPosition(MouseX, MouseY);
+                }
+
+                if (state.IsKeyDown(Keys.W))
+                {
+                    MouseY -= TitleScreen.CURSOR_SPEED;
+                    Mouse.SetPosition(MouseX, MouseY);
+                }
+            }
 
             if (GameState == GameStates.Waiting)
             {

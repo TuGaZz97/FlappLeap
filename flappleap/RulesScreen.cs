@@ -15,6 +15,8 @@ namespace FlappLeap
         private Button BackButton { get; set; }
 
         private SpriteFont FlappyFont { get; set; }
+        private int MouseX { get; set; }
+        private int MouseY { get; set; }
 
         private int maxDisplay;
         private int startDisplay = 0;
@@ -23,7 +25,7 @@ namespace FlappLeap
         private int gameHeight;
         private int sizeButtonTouch;
 
-        private string text_But = "BUT\r\n Le but de FlappLeap est d'effectuer le score le plus eleve en traverssant les differents obstacles. /r/n";
+        private string text_But = "BUT\r\n Le but de FlappLeap est d'effectuer le score le plus eleve en traverssant les differents obstacles.";
         private string text_Touches = "TOUCHES\r\n Les differentes touchent du jeu: \r\n S pour demarrer la partie  \r\n R pour recommencer apres la mort,  \r\n Space pour voler \r\n En mode multijoueur la fleche du haut pour faire sauter le deuxieme personnage.";
         private string text_Difficulte = "DIFFICULTE\r\n La difficulte du jeu est crescendo par rapport au score dans le jeu, la vitesse et les obstacles sont multiplies";
 
@@ -57,6 +59,9 @@ namespace FlappLeap
             // Display all buttons
             this.Game.Components.Add(this.BackButton);
 
+            this.MouseX = TitleScreen.MouseX;
+            this.MouseY = TitleScreen.MouseY;
+
             base.Initialize();
         }
 
@@ -65,9 +70,34 @@ namespace FlappLeap
             this.Sb.Begin();
             this.Sb.DrawString(this.FlappyFont, "Bienvenue dans FlappLeap", new Vector2(gameWidth / 70, gameHeight / 18), Color.White);
             this.Sb.DrawString(this.FlappyFont, text_But + "\r\n" + "\r\n" + text_Touches + "\r\n" + "\r\n" + text_Difficulte, new Vector2(gameWidth / 70, gameHeight / 9), Color.White);
-            
-
             this.Sb.End();
+
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.D))
+            {
+                this.MouseX += TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+
+            }
+
+            if (state.IsKeyDown(Keys.S))
+            {
+                this.MouseY += TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+            }
+
+            if (state.IsKeyDown(Keys.A))
+            {
+                this.MouseX -= TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+            }
+
+            if (state.IsKeyDown(Keys.W))
+            {
+                this.MouseY -= TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+            }
             base.Draw(gameTime);
         }
 

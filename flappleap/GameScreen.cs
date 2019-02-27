@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 
@@ -17,9 +18,10 @@ namespace FlappLeap
     {
         protected SpriteBatch Sb { get; set; }
         protected SpriteFont Font { get; set; }
+        
 
         //Music Game
-        private Song FlappSong;
+        
 
         protected Vector2 CenterScreen
         {
@@ -36,9 +38,7 @@ namespace FlappLeap
         {
             this.Sb = new SpriteBatch(this.Game.GraphicsDevice);
             this.Font = this.Game.Content.Load<SpriteFont>("FontBig");
-            FlappSong = this.Game.Content.Load<Song>("Musiques/FlappLeapMusic");
             
-            //MediaPlayer.Play(FlappSong);
 
             base.LoadContent();
         }
@@ -47,6 +47,8 @@ namespace FlappLeap
         {
             // Frames per second
             double frameRate = Math.Round(1d / gameTime.ElapsedGameTime.TotalSeconds);
+
+            
 
             this.Sb.Begin();
             this.Sb.DrawString(this.Font, frameRate + " FPS", new Vector2(5, 5), Color.White);

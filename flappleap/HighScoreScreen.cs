@@ -21,6 +21,9 @@ namespace FlappLeap
         private Button Down { get; set; }
         private Button BackButton { get; set; }
 
+        public int MouseX { get; set; }
+        public int MouseY { get; set; }
+
         private int maxDisplay;
         private int startDisplay = 0;
         int floorDistance = 50;
@@ -71,6 +74,10 @@ namespace FlappLeap
             this.Game.Components.Add(this.BackButton);
             this.Game.Components.Add(this.Up);
             this.Game.Components.Add(this.Down);
+
+
+            this.MouseX = TitleScreen.MouseX;
+            this.MouseY = TitleScreen.MouseY;
 
             base.Initialize();
         }
@@ -125,6 +132,34 @@ namespace FlappLeap
             }
 
             this.Sb.End();
+
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.D))
+            {
+                this.MouseX += TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+
+            }
+
+            if (state.IsKeyDown(Keys.S))
+            {
+                this.MouseY += TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+            }
+
+            if (state.IsKeyDown(Keys.A))
+            {
+                this.MouseX -= TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+            }
+
+            if (state.IsKeyDown(Keys.W))
+            {
+                this.MouseY -= TitleScreen.CURSOR_SPEED;
+                Mouse.SetPosition(this.MouseX, this.MouseY);
+            }
+
             base.Draw(gameTime);
         }
 

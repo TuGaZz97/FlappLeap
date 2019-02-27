@@ -13,6 +13,27 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Font.spritefont
+
+#begin FontBig.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:FontBig.spritefont
+
+#begin FontSmall.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:FontSmall.spritefont
+
 #begin Images/Backgrounds/layer_01.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -73,7 +94,7 @@
 /processorParam:TextureFormat=Color
 /build:Images/Backgrounds/layer_05.png
 
-#begin Images/Obstacles/wall.png
+#begin Images/doge.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -83,7 +104,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Images/Obstacles/wall.png
+/build:Images/doge.png
+
+#begin Images/flappy_logo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/flappy_logo.png
 
 #begin Images/LilSleepy.png
 /importer:TextureImporter
@@ -109,7 +142,7 @@
 /processorParam:TextureFormat=Color
 /build:Images/Obstacles/floor.png
 
-#begin Images/flappy_logo.png
+#begin Images/Obstacles/wall.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -119,40 +152,13 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Images/flappy_logo.png
+/build:Images/Obstacles/wall.png
 
-#begin FontBig.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:FontBig.spritefont
-
-#begin FontSmall.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:FontSmall.spritefont
-
-#begin Font.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Font.spritefont
-
-#begin Images/doge.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/doge.png
+#begin Musiques/AboiementGrosChien_Découpé.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Musiques/AboiementGrosChien_Découpé.wav
 
 #begin Musiques/FlappLeapMusic.mp3
 /importer:Mp3Importer
@@ -160,15 +166,9 @@
 /processorParam:Quality=Best
 /build:Musiques/FlappLeapMusic.mp3
 
-#begin Musiques/AboiementPtiChien_Découpé.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
+#begin Musiques/Shotgun.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
 /processorParam:Quality=Best
-/build:Musiques/AboiementPtiChien_Découpé.wav
-
-#begin Musiques/AboiementGrosChien_Découpé.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Musiques/AboiementGrosChien_Découpé.wav
+/build:Musiques/Shotgun.mp3
 
