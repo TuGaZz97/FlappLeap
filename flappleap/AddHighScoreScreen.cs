@@ -3,6 +3,8 @@
  * Class  : TIS-E1B
  * Date   : 15.01.2018
  * Projet : FlappLeap
+ * Version 1.0
+ * Version 2.0 - 06.03.2019 - Rodrigues Micael
  */
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -54,7 +56,17 @@ namespace FlappLeap
         public AddHighScoreScreen(FlappLeapGame game, int score) : base(game)
         {
             if (score > -1)
+            {
                 this.score = score;
+                if (score <= 10)
+                {
+                    this.level = 1;
+                }
+                else
+                {
+                    this.level = score / 10;
+                }
+            }
 
             gameWidth = game.Graphics.PreferredBackBufferWidth; // 1920
             gameHeight = game.Graphics.PreferredBackBufferHeight; // 1080
