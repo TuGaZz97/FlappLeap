@@ -76,35 +76,35 @@ namespace FlappLeap
                     counter = 0;
                 }
             }
-            else if (((RightHand < -0.8f && RightHand > -2.5f) == true) & ((LeftHand > 0.8f && LeftHand < 2.5f) == true) & (DistanceBetweenHands < 60) == true)
+            else 
             {
-                clap_count++;
-                clapped = true;
-                return true;
+                for (int i = 0; i < gsl.Count(); i++)
+                {
+                    Gesture g = gsl[i];
+
+                    switch (g.Type)
+                    {
+                        case Gesture.GestureType.TYPECIRCLE:
+                            // tbxEvents.Text += "Cercle" + Environment.NewLine;
+                            break;
+                        case Gesture.GestureType.TYPESWIPE:
+                            clap_count++;
+                            clapped = true;
+                            return true;
+                        case Gesture.GestureType.TYPE_KEY_TAP:
+                            // tbxEvents.Text += "Key Tap" + Environment.NewLine;
+                            break;
+                        case Gesture.GestureType.TYPE_SCREEN_TAP:
+                            return true;
+                            //break;
+                    }
+                }
+                
             }
 
             // END OF CLAP DETECTION
 
-            for (int i = 0; i < gsl.Count(); i++)
-            {
-                Gesture g = gsl[i];
-
-                switch (g.Type)
-                {
-                    case Gesture.GestureType.TYPECIRCLE:
-                        // tbxEvents.Text += "Cercle" + Environment.NewLine;
-                        break;
-                    case Gesture.GestureType.TYPESWIPE:
-                        // tbxEvents.Text += "Swipe" + Environment.NewLine;
-                        break;
-                    case Gesture.GestureType.TYPE_KEY_TAP:
-                        // tbxEvents.Text += "Key Tap" + Environment.NewLine;
-                        break;
-                    case Gesture.GestureType.TYPE_SCREEN_TAP:
-                        return true;
-                        //break;
-                }
-            }
+            
 
             return false;
         }

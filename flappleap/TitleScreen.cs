@@ -14,7 +14,7 @@ namespace FlappLeap
 {
     public class TitleScreen : GameScreen
     {
-        public const int CURSOR_SPEED = 3;
+        public const int CURSOR_SPEED = 8;
 
         private string spriteFontButton;
 
@@ -40,6 +40,7 @@ namespace FlappLeap
         {
             int gameWidth = this.FlappLeapGame.Graphics.PreferredBackBufferWidth;
             int gameHeight = this.FlappLeapGame.Graphics.PreferredBackBufferHeight;
+            this.FlappLeapGame.Graphics.IsFullScreen = true;
             int buttonsWidth = 250, buttonsSpacing = 150;
             spriteFontButton = "FontSmall";
 

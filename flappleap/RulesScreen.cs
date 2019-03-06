@@ -26,7 +26,7 @@ namespace FlappLeap
         private int sizeButtonTouch;
 
         private string text_But = "BUT\r\n Le but de FlappLeap est d'effectuer le score le plus eleve en traverssant les differents obstacles.";
-        private string text_Touches = "TOUCHES\r\n Les differentes touchent du jeu: \r\n S pour demarrer la partie  \r\n R pour recommencer apres la mort,  \r\n Space pour voler \r\n En mode multijoueur la fleche du haut pour faire sauter le deuxieme personnage.";
+        private string text_Touches = "TOUCHES\r\n Les differentes touchent du jeu: \r\n $ pour demarrer la partie  \r\n MAN pour recommencer apres la mort,  \r\n Premier bouton de la ligne du bas pour voler \r\n En mode multijoueur premier bouton de la ligne du bas pour faire sauter le deuxieme personnage.";
         private string text_Difficulte = "DIFFICULTE\r\n La difficulte du jeu est crescendo par rapport au score dans le jeu, la vitesse et les obstacles sont multiplies";
 
         private string spriteFontButton;

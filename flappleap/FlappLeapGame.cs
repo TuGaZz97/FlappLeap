@@ -57,10 +57,12 @@ namespace FlappLeap
                 PreferredBackBufferHeight = Constants.GAME_HEIGHT
             };
 
+            this.Graphics.IsFullScreen = false;
             // LEAP CODE
             this.controller = new Controller();
             this.listener = new LeapEventListener(this);
             this.lClass = new LeapClass();
+            
             controller.AddListener(listener);
             // END LEAP CODE
 
